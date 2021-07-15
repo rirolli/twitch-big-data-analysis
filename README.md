@@ -13,6 +13,20 @@ Per la replicazione di questo progetto sono richiesti i seguenti pacchetti e sof
 * Kafka 2.13-2.8.0
 * MongoDB 5.0.0
 
+## Struttura del progetto
+Per poter funzionare le directory del progetto devono essere create come segue:
+``````
+/twitch-big-data-analysis
+|-- /batch_jobs
+|-- /dataset
+|   |-- /broadcaster
+|   |-- /dashboard
+|   |-- /samples
+|   |   |-- /dashboard_sample
+|   |    -- /twitch_data_sample
+|    -- /twitch_data
+ -- /streaming_jobs
+``````
 ## Come avviare il progetto
 Per prima cosa bisogna avviare i servizi di Kafka 
 ``````

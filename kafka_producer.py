@@ -34,9 +34,9 @@ SAMPLE = True   # True if we want test the project on few samples.
 LIMIT = 10      # We want to limit the number of sources to spped the test of the project. -1 if we don't want limit.
 
 if SAMPLE == False:
-    dataset_path = "dataset/Twitch_data"
+    dataset_path = "dataset/twitch_data"
 else:
-    dataset_path = "dataset/samples/twitch-dataset_sample"
+    dataset_path = "dataset/samples/twitch_data_sample"
 
 def parse_lines(line):
     line = line.split("\t") # split of the line
