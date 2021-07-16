@@ -2,13 +2,58 @@
 Secondo progetto per il corso di Big Data durante A.A. 2020/2021. Progetto che si incentra sulla creazione di una architettura lambda per effettuare analisi streaming e batch su dati estratti dalla piattaforma Twitch.
 
 ## Indice
+* [Obiettivi](#obiettivi)
+    * [Analisi Streaming](#analisi-streaming)
+    * [Analisi Batch](#analisi-batch)
 * [Dataset](#dataset)
 * [Requirements](#requirements)
 * [Struttura del progetto](#struttura-del-progetto)
 * [Come eseguire il codice](#come-eseguire-il-codice)
 
+## Obiettivi
+Qui di seguito sono elencati i task che questo progetto deve essere in grado di svolgere. I task si dividono in due tipologie di analisi: streaming e batch. La prima analizza i dati provenienti dalle sorgenti in near-real-time mentre l'analisi batch esegu delle analisi periodiche prelevando i dati dal database noSQL.
+
+### Analisi Streaming
+* Analisi delle visualizzazioni correnti per ogni streaming generandone una classifica;
+* analisi del numero degli streaming attivi per ogni categoria al fine di determinare i giochi in tendenza;
+* analisi degli streaming al fine di determinare una percentuale delle persone che guardano lo streaming rispetto al totale degli iscritti.
+
+### Analisi Batch
+* Analizzare qual è la piattaforma (PS4 o Xbox) preferita dagli streamer e qual è quella più seguita dagli utenti;
+* classificare per ogni Streamer le categorie preferite dai propri iscritti;
+* produrre una Top 25 dei giochi e degli streamer più seguiti dagli utenti della piattaforma in ogni mese.
+
 ## Dataset
-I dati utilizzati per simulare uno streaming sono stati presi dalla repository presente nel seguente link: https://clivecast.github.io.
+I dati utilizzati per simulare il crawling streaming sono stati presi dalla repository github https://clivecast.github.io. In questo link è presente anche una descrizione dettagliata di tutti i campi dei vari file.
+
+Per simulare il crawling dei dati dalla piattaforma Twitch si usa lo script ```kafka_producer.py``` che preleva le righe dai file presenti nella cartella ```/twitch_data``` e li carica su kafka con la seguente struttura:
+
+``````
+[
+    stream_id, 
+    [
+        current_view,
+        stream_created_time,
+        game_name, 
+        [
+            broadcaster_id, 
+            [
+                broadcaster_name,
+                delay_settings,
+                follower_number,
+                partner_status,
+                broadcaster_language,
+                total_view_broadcaster,
+                language,
+                broadcaster_created_time,
+                playback_bitrate,
+                source_resolution
+            ]
+        ]
+    ],
+    crawling_time
+]
+``````
 
 ## Requirements
 Per la replicazione di questo progetto sono richiesti i seguenti pacchetti e software:
