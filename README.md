@@ -68,10 +68,16 @@ $HADOOP_HOME/bin/hdfs namenode -format
 $HADOOP_HOME/sbin/start-dfs.sh
 ``````
 
-A questo punto è possibile avviare l'esecuzione eseguendo il file ```start.sh```
+A questo punto è possibile avviare l'esecuzione eseguendo il file ```start.sh```:
 
 ``````
 ./start.sh
 ``````
 
-__Attenzione!__ Assicurarsi di aver aggiunto correttamente i vari framework al PATH e di aver dato i permessi di esecuzione al file ```start.sh``` (in caso contrario è possibile usare il comando ```chmod u+w start.sh```).
+All'interno della repoitory è presente un file ```start-all.sh``` che permette di automatizzare questo processo di avvio di tutti i servizi appena elencati:
+
+``````
+./start-all.sh
+``````
+
+__Attenzione!__ Assicurarsi di aver aggiunto correttamente i vari framework al PATH e di aver dato i permessi di esecuzione al file ```start.sh``` o ```start-all.sh``` (in caso contrario è possibile usare il comando ```chmod u+w start.sh``` oppure ```chmod u+w start-all.sh```).  
