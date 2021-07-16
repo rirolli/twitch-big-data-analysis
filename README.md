@@ -11,7 +11,7 @@ Secondo progetto per il corso di Big Data durante A.A. 2020/2021. Progetto che s
 * [Come eseguire il codice](#come-eseguire-il-codice)
 
 ## Obiettivi
-Qui di seguito sono elencati i task che questo progetto deve essere in grado di svolgere. I task si dividono in due tipologie di analisi: streaming e batch. La prima analizza i dati provenienti dalle sorgenti in near-real-time mentre l'analisi batch esegu delle analisi periodiche prelevando i dati dal database noSQL.
+Qui di seguito sono elencati i task che questo progetto deve essere in grado di svolgere. I task si dividono in due tipologie di analisi: streaming e batch. La prima analizza i dati provenienti dalle sorgenti in near-real-time mentre l'analisi batch esegue delle analisi periodiche prelevando i dati dal database noSQL.
 
 ### Analisi Streaming
 * Analisi delle visualizzazioni correnti per ogni streaming generandone una classifica;
