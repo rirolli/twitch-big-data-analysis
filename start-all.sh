@@ -24,8 +24,11 @@ gnome-terminal -t "Kafka Services" -e  "$KAFKA_HOME/bin/kafka-server-start.sh $K
 sleep 10s
 
 # create the topic "twitch" in kafka
-echo "Creazione del topic"
-gnome-terminal -t "Twitch Topic Creation" -e  "$KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic twitch" &
+echo "Rimozione e creazione del topic twitch"
+# il comando di rimozione funziona solo se è stata aggiunta la riga
+# "delete.topic.enable=true” in $KAFKA_HOME/config/server.properties
+$KAFKA_HOME/bin/kafka-topics.sh --zookeeper localhost:2181 --topic twitch --delete
+$KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic twitch
 
 sleep 10s
 

@@ -3,6 +3,8 @@
 # start the project
 # --from-beginning
 echo "Avvio dei programmi"
+
+# starting of kafka-console-consumer
 gnome-terminal -t "kafka-console-consumer.sh" -e "$KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic twitch" &
 
 # starting of streaming scripts
