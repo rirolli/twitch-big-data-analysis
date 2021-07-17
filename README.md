@@ -27,10 +27,10 @@ Qui di seguito sono elencati i task che questo progetto deve essere in grado di 
 ## Dataset
 I dati utilizzati per simulare il crawling streaming sono stati presi dalla repository github https://clivecast.github.io. In questo link è presente anche una descrizione dettagliata di tutti i campi dei vari file.
 
-Per simulare il crawling dei dati dalla piattaforma Twitch si usa lo script ```kafka_producer.py``` che preleva le righe dai file presenti nella cartella ```/twitch_data``` e li carica su kafka con il seguente formato (csv-like):
+Per simulare il crawling dei dati dalla piattaforma Twitch si usa lo script ```kafka_producer.py``` che preleva le righe dai file presenti nella cartella ```/twitch_data``` e li carica su kafka con il seguente formato json:
 
 ``````
-"stream_id,current_view,stream_created_time,game_name,broadcaster_id,broadcaster_name,delay_settings,follower_number,partner_status,broadcaster_language,total_view_broadcaster,language,broadcaster_created_time,playback_bitrate,source_resolution,current_time"
+{'stream_id':stream_id, 'current_view':current_view, 'stream_created_time':stream_created_time, 'game_name':game_name, 'broadcaster_id':broadcaster_id, 'broadcaster_name':broadcaster_name, 'delay_settings':delay_settings, 'follower_number':follower_number, 'partner_status':partner_status, 'broadcaster_language':broadcaster_language, 'total_view_broadcaster':total_view_broadcaster, 'language':language, 'broadcaster_created_time':broadcaster_created_time, 'playback_bitrate':playback_bitrate, 'source_resolution':source_resolution, 'current_time':current_time}
 ``````
 
 ## Requirements

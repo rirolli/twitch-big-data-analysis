@@ -66,7 +66,12 @@ def parse_lines(line):
     source_resolution = line[14]
     current_time = line[15]
 
-    return (stream_id, (current_view, stream_created_time, game_name, (broadcaster_id, (broadcaster_name, delay_settings, follower_number, partner_status, broadcaster_language, total_view_broadcaster, language, broadcaster_created_time, playback_bitrate, source_resolution))), current_time)
+    return {'stream_id':stream_id, 'current_view':current_view, 'stream_created_time':stream_created_time,
+    'game_name':game_name, 'broadcaster_id':broadcaster_id, 'broadcaster_name':broadcaster_name,
+    'delay_settings':delay_settings, 'follower_number':follower_number, 'partner_status':partner_status,
+    'broadcaster_language':broadcaster_language, 'total_view_broadcaster':total_view_broadcaster,
+    'language':language, 'broadcaster_created_time':broadcaster_created_time, 'playback_bitrate':playback_bitrate,
+    'source_resolution':source_resolution, 'current_time':current_time}
 
 def main():
     files_list = [f for f in listdir(dataset_path) if isfile(join(dataset_path, f))]    # return a list of all the files into the directory we want crawl
