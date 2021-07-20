@@ -113,6 +113,7 @@ Una possibile soluzione è quella di non salvare i temp su hdfs ma di farlo in l
 
 
 ### DataNode missing
+__Prima di tutto__ prova a riavviare il computer (anche più volte). Questo azzererà i file temporanei permettendo un format più pulito. Se non dovesse funzionare provare con la guida qui di seguito.  
 Un problema che si è presentato durante la prima esecuzione degli script di streaming è stato l'impossibilità di scrivere sul file temporaneo tmp a causa della mancata esecuzione del _DataNode_:
 ``````
 There are 0 datanode(s) running and 0 node(s) are excluded in this operation.

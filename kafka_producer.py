@@ -39,7 +39,7 @@ from datetime import datetime
 # [12749764544, [0, "2015-01-20T21:43:45Z", "Music", [75412148, ["dimmak", "-1", 452, "True", "en", 3563, "en", "2014-11-18T00:09:16Z", 1458281, "1920x1080"]]], "2015-02-01T00:05:00Z"]
 
 SAMPLE = True   # True if we want test the project on few samples.
-LIMIT = 10      # We want to limit the number of sources to spped the test of the project. -1 if we don't want limit.
+LIMIT = -1      # We want to limit the number of sources to spped the test of the project. -1 if we don't want limit.
 
 if SAMPLE == False:
     dataset_path = "dataset/twitch_data"
@@ -64,14 +64,14 @@ def parse_lines(line):
     broadcaster_created_time = line[12]
     playback_bitrate = int(line[13])
     source_resolution = line[14]
-    current_time = line[15]
+    crawl_time = line[15]
 
     return {'stream_id':stream_id, 'current_view':current_view, 'stream_created_time':stream_created_time,
     'game_name':game_name, 'broadcaster_id':broadcaster_id, 'broadcaster_name':broadcaster_name,
     'delay_settings':delay_settings, 'follower_number':follower_number, 'partner_status':partner_status,
     'broadcaster_language':broadcaster_language, 'total_view_broadcaster':total_view_broadcaster,
     'language':language, 'broadcaster_created_time':broadcaster_created_time, 'playback_bitrate':playback_bitrate,
-    'source_resolution':source_resolution, 'current_time':current_time}
+    'source_resolution':source_resolution, 'crawl_time':crawl_time}
 
 def main():
     files_list = [f for f in listdir(dataset_path) if isfile(join(dataset_path, f))]    # return a list of all the files into the directory we want crawl
