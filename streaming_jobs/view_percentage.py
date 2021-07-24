@@ -38,15 +38,24 @@ input_df = spark \
 
 string_df = input_df.selectExpr("CAST(value AS STRING)")  # cast of the value column from bytes to string
 
-df = string_df.select(from_json(col("value"), schema).alias("data"))
+df = string_df.select(from_json(col("value"), schema).alias("data"))    # importazione della tabella dal formato json
 
 df_watermark = df.select("data.stream_id", 'data.game_name', 'data.current_view', 'data.broadcaster_id', 'data.broadcaster_name', 'data.follower_number', col("data.crawl_time").cast("timestamp")) \
-    .withWatermark("crawl_time", "5 minutes").withColumn('view_percentage', col('current_view')/col('follower_number'))
+    .withColumn('view_percentage', col('current_view')/col('follower_number'))
     
 query = df_watermark \
     .writeStream \
         .outputMode("append") \
-            .format("console") \
-                .start() \
-                    .awaitTermination()
+            .format("csv") \
+                .option("checkpointLocation", "checkpoint/view_percentage_checkpoint") \
+                    .option("path", "outputs/view_percentage_output") \
+                        .partitionBy("crawl_time") \
+                            .start() \
+                                .awaitTermination()
 
+# query = df_watermark \
+#     .writeStream \
+#         .outputMode("append") \
+#             .format("console") \
+#                 .start() \
+#                     .awaitTermination()
