@@ -3,7 +3,7 @@ import pathlib
 
 from kafka import KafkaProducer
 
-from json import dumps, dump, load, loads
+from json import dumps, loads
 
 from pyspark.sql import *
 from pyspark.sql.types import *
@@ -41,7 +41,7 @@ from datetime import datetime
 # [12749764544, [0, "2015-01-20T21:43:45Z", "Music", [75412148, ["dimmak", "-1", 452, "True", "en", 3563, "en", "2014-11-18T00:09:16Z", 1458281, "1920x1080"]]], "2015-02-01T00:05:00Z"]
 
 SAMPLE = True   # True if we want test the project on few samples.
-LIMIT = 2      # We want to limit the number of sources to spped the test of the project. -1 if we don't want limit.
+LIMIT = 7      # We want to limit the number of sources to spped the test of the project. -1 if we don't want limit.
 
 if SAMPLE == False:
     dataset_path = "dataset/twitch_data"

@@ -15,7 +15,9 @@ Secondo progetto per il corso di Big Data durante A.A. 2020/2021. Progetto che s
 Qui di seguito sono elencati i task che questo progetto deve essere in grado di svolgere. I task si dividono in due tipologie di analisi: streaming e batch. La prima analizza i dati provenienti dalle sorgenti in near-real-time mentre l'analisi batch esegue delle analisi periodiche prelevando i dati dal database noSQL.
 
 ### Analisi Streaming
-* Analisi delle visualizzazioni correnti per ogni streaming generandone una classifica;
+* Analisi delle visualizzazioni per ogni streaming:
+    * Analisi delle visualizzazioni correnti per ogni streaming generandone una classifica;
+    * Analisi delle visualizzazioni medie per ogni streaming generandone una classifica;
 * analisi del numero degli streaming attivi per ogni categoria al fine di determinare i giochi in tendenza;
 * analisi degli streaming al fine di determinare una percentuale delle persone che guardano lo streaming rispetto al totale degli iscritti.
 
@@ -55,6 +57,8 @@ Per poter funzionare il progetto deve essere strutturato come segue:
 |   |    -- /twitch_data_sample
 |    -- /twitch_data
  -- /streaming_jobs
+    |-- /pyspark_sql
+     -- /pyspark_streaming
 ``````
 in particolare:
 * __/batch_jobs__ contiene file di script di esecuzione dei job in batch;
