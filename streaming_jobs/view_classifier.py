@@ -1,3 +1,4 @@
+from time import sleep
 from pyspark.sql import *
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
@@ -36,33 +37,24 @@ input_df = spark \
                     .option("subscribe", "twitch") \
                         .load()
 
-# input_df.printSchema()  # standard in kafka
-
 # https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html
 # https://docs.databricks.com/getting-started/spark/streaming.html
 
 string_df = input_df.selectExpr("CAST(value AS STRING)")  # cast of the value column from bytes to string
 
-df = string_df.select(from_json(col("value"), schema).alias("data"))
+df = string_df.select(from_json(col("value"), schema).alias("data"))    # importazione della tabella dal formato json
 
-# df.printSchema()
+output_df = df.select('data.stream_id', 'data.game_name', 'data.current_view', col('data.stream_created_time').cast('timestamp'), col("data.crawl_time").cast("timestamp"))
 
-# Split the lines into words
-# words = lines_df.select(explode(lines_df.value))
-# data = df.select('data.*')
-
-# last_crawl_date_df = df.select("data.stream_id", "data.game_name", "data.broadcaster_name", "data.current_view", col("data.crawl_time").cast("timestamp"))
-# last_crawl_date_df = df.select("data.stream_id", col("data.crawl_time").cast("timestamp")) \
-#     .groupBy("stream_id") \
-#         .agg(max("crawl_time").alias("max_crawl_time"))
-
-# last_crawl_date_df_watermark = df.select("data.stream_id", col("data.crawl_time").cast("timestamp")).withWatermark("crawl_time", "5 seconds")
-df_watermark = df.select("data.stream_id", 'data.current_view', 'data.game_name', col("data.crawl_time").cast("timestamp")) \
-    .withWatermark("crawl_time", "5 minutes")
-
-output_df = df_watermark.groupBy("crawl_time", "stream_id", "game_name")\
-    .max("current_view")
-
+# query = output_df \
+#     .writeStream \
+#         .outputMode("append") \
+#             .format("csv") \
+#                 .option("checkpointLocation", "checkpoint/view_classifier_checkpoint") \
+#                     .option("path", "outputs/view_classifier_output") \
+#                         .partitionBy("crawl_time") \
+#                             .start() \
+#                                 .awaitTermination()
 
 query = output_df \
     .writeStream \
