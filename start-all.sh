@@ -15,7 +15,7 @@ gnome-terminal -t "MongoDB Services" -e  "$MONGO_HOME/bin/mongod --dbpath $MONGO
 echo "Avvio dei servizi di Zookeeper"
 gnome-terminal -t "Zookeeper Services" -e  "$KAFKA_HOME/bin/zookeeper-server-start.sh $KAFKA_HOME/config/zookeeper.properties" &
 
-sleep 5s
+sleep 10s
 
 # start kafka
 echo "Avvio dei servizi di Kafka"
