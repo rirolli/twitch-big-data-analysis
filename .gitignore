@@ -130,3 +130,6 @@ dmypy.json
 
 # Old versions
 *.old
+
+# TODO
+.TODO
