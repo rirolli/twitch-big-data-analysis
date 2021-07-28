@@ -36,13 +36,24 @@ Per simulare il crawling dei dati dalla piattaforma Twitch si usa lo script ```k
 ``````
 
 ## Requirements
-Per la replicazione di questo progetto sono richiesti i seguenti pacchetti e software:
+Per la replicazione di questo progetto sono richiesti i seguenti software:
 * Python 3.8.10
 * Java 8
 * Hadoop 3.2.2
 * Spark 3.1.1
 * Kafka 2.13-2.8.0
 * MongoDB 5.0.0
+
+Per l'esecuzione degli script è necessario avere installato il pacchetto `gnome-terminal`:
+``````
+sudo apt install gnome-terminal
+``````
+
+Le librerie Python necessarie per far funzionare il progetto sono elencate in _requirements.txt_:
+* kafka-python==2.0.2
+* py4j==0.10.9
+* pymongo==3.12.0
+* pyspark==3.1.2
 
 ## Struttura del progetto
 Per poter funzionare il progetto deve essere strutturato come segue:
