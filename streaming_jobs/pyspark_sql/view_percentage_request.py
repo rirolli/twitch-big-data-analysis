@@ -71,5 +71,4 @@ class ViewPercentageRequest:
                 lines = ranked_df.toJSON().collect()
                 lines = map(lambda x: loads(x), lines)
                 lines = {self.last_crawl_view.strftime("%Y-%m-%dT%H:%M:%S"):list(lines)}
-                print(lines)
                 self.mongo_col.insert_one(document=lines)
