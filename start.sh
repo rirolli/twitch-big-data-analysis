@@ -7,6 +7,9 @@ echo "Avvio dei programmi"
 # starting of kafka-console-consumer
 gnome-terminal -t "kafka-console-consumer.sh" -e "$KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic twitch" &
 
+# starting of Kafka-MongoDB connector
+gnome-terminal -t "kafka_mongo_connector.py" -e "python3 batch_jobs/kafka_mongo_connector.py"
+
 # starting of streaming scripts
 gnome-terminal -t "controller.py" -e "python3 streaming_jobs/controller.py"
 
