@@ -8,12 +8,17 @@ from pyspark_sql.view_classifier_request import ViewClassifierRequest
 from pyspark_sql.view_percentage_request import ViewPercentageRequest
 from pyspark_sql.trend_games_request import TrendGamesRequest
 
+from pymongo import MongoClient
+
 def main():
+
     # spark session
     spark = SparkSession \
         .builder \
             .appName("views") \
                 .getOrCreate()
+
+    mongo = MongoClient(host='localhost', port=27017)
 
     print('###### Starting the PySpark Streaming jobs ######')
     os.system('gnome-terminal -t "view_classifier.py" -e "$SPARK_HOME/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 --master local streaming_jobs/pyspark_streaming/view_classifier.py"')
@@ -24,9 +29,13 @@ def main():
 
     print('###### Starting the SQL Analysis Jobs ######')
     # inizializzazioni
-    vcr = ViewClassifierRequest(spark=spark)
-    vpr = ViewPercentageRequest(spark=spark)
-    tgr = TrendGamesRequest(spark=spark)
+    # vcr = ViewClassifierRequest(spark_view=spark, spark_mean=spark, mongo=mongo, save_format='mongo')
+    # vpr = ViewPercentageRequest(spark=spark, mongo=mongo, save_format='mongo')
+    # tgr = TrendGamesRequest(spark=spark, mongo=mongo, save_format='mongo')
+
+    vcr = ViewClassifierRequest(save_format='mongo')
+    vpr = ViewPercentageRequest(save_format='mongo')
+    tgr = TrendGamesRequest(save_format='mongo')
 
     # esecuzione dei job sql
     try:

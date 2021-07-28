@@ -2,7 +2,11 @@ from pyspark.sql import *
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
 
-from datetime import timedelta
+from datetime import timedelta, datetime
+
+from pymongo import MongoClient
+
+from json import loads
 
 class ViewClassifierRequest:
 
@@ -20,18 +24,39 @@ class ViewClassifierRequest:
     last_crawl_view_classifier = None
     last_crawl_mean_view_classifier = None
 
-    def __init__(self, spark=None):
+    def __init__(self, spark_view=None, spark_mean=None, mongo=None, save_format=None):
+        '''
+        save_format è il formato di salvtaggio dei file in output.
+        La scelta può essere tra: ['hadoop', 'mongo', None].
+        '''
+
+        self.save_format = save_format
+
         # spark session
-        if spark is None:
-            spark = SparkSession \
+        if spark_view is None:
+            spark_view = SparkSession \
                 .builder \
                     .appName("view_classifier_requests") \
                         .getOrCreate()
-        self.spark = spark
+
+        if spark_mean is None:
+            spark_mean = SparkSession \
+                .builder \
+                    .appName("view_classifier_requests") \
+                        .getOrCreate()
+        self.spark_view = spark_view
+        self.spark_mean = spark_mean
+
+        if mongo is None:
+            mongo = MongoClient(host='localhost', port=27017)
+        self.mongo_client = mongo
+        self.mongo_db = self.mongo_client.twitch_sql
+        self.mongo_view = self.mongo_db.view_classifier
+        self.mongo_mean = self.mongo_db.mean_classifier
 
     def get_view_classifier(self, verbose=True):
         # lettura dai file csv partitionati salvati di volta in volta dallo streaming
-        input_df = self.spark.read.csv(self.input_filepath, schema=self.schema)
+        input_df = self.spark_view.read.csv(self.input_filepath, schema=self.schema)
 
         # ricerca dell'ultima data
         last_crawl = input_df.select(max(col("crawl_time"))).first()['max(crawl_time)']
@@ -47,11 +72,18 @@ class ViewClassifierRequest:
             if verbose:
                 ranked_df.show()
 
-            ranked_df.write.json(self.output_view_filepath, mode='append')
+            if self.save_format=='hadoop':
+                ranked_df.write.json(self.output_view_filepath, mode='append')
+            if self.save_format=='mongo':
+                lines = ranked_df.toJSON().collect()
+                lines = map(lambda x: loads(x), lines)
+                lines = {self.last_crawl_view_classifier.strftime("%Y-%m-%dT%H:%M:%S"):list(lines)}
+                self.mongo_view.insert_one(document=lines)
+
 
     def get_mean_view_classifier(self, verbose=True):
         # lettura dai file csv partitionati salvati di volta in volta dallo streaming
-        input_df = self.spark.read.csv(self.input_filepath, schema=self.schema)
+        input_df = self.spark_mean.read.csv(self.input_filepath, schema=self.schema)
 
         # ricerca dell'ultima data
         last_crawl = input_df.select(max(col("crawl_time"))).first()['max(crawl_time)']
@@ -83,4 +115,10 @@ class ViewClassifierRequest:
             if verbose:
                 stream_join_df.show()
 
-            stream_join_df.write.json(self.output_mean_filepath, mode='append')
+            if self.save_format=='hadoop':
+                stream_join_df.write.json(self.output_mean_filepath, mode='append')
+            if self.save_format=='mongo':
+                lines = stream_join_df.toJSON().collect()
+                lines = map(lambda x: loads(x), lines)
+                lines = {self.last_crawl_mean_view_classifier.strftime("%Y-%m-%dT%H:%M:%S"):list(lines)}    # chiave il tempo di crawling
+                self.mongo_mean.insert_one(document=lines)
