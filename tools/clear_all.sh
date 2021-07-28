@@ -7,4 +7,4 @@ $HADOOP_HOME/bin/hdfs dfs -rm -r outputs
 $HADOOP_HOME/bin/hdfs dfs -rm -r checkpoint
 
 echo "Rimozione di tutti i record da MongoDB"
-gnome-terminal -t "clear_mongodb.py" -e  "python3 clear_mongodb.py" &
+gnome-terminal -t "clear_mongodb.py" -e  "python3 clear_mongodb.py"
