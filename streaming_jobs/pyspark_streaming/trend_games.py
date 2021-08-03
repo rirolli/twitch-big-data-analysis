@@ -6,6 +6,8 @@ from pyspark.sql.functions import *
 
 # Job2: analisi del numero degli streaming attivi per ogni categoria al fine di determinare i giochi in tendenza;
 
+debug = False
+
 schema = StructType([StructField('stream_id',StringType(),False),
                     StructField('current_view',IntegerType(),True),
                     StructField('stream_created_time',TimestampType(),True),
@@ -27,7 +29,7 @@ def main():
     # spark session
     spark = SparkSession \
         .builder \
-            .appName("view_classifier") \
+            .appName("trend_games") \
                 .getOrCreate()
 
     input_df = spark \
@@ -42,28 +44,25 @@ def main():
 
     df = string_df.select(from_json(col("value"), schema).alias("data"))    # from json kafka to schema
 
-    df_watermark = df.select("data.stream_id", 'data.game_name', col("data.crawl_time").cast("timestamp")) \
-        .withWatermark('crawl_time', '5 minutes')
+    output_df = df.select("data.game_name", col("data.crawl_time").cast("timestamp"))
 
-    output_df = df_watermark.groupBy("crawl_time", "game_name")\
-        .count()
-        
-    query = output_df \
-        .writeStream \
-            .outputMode("append") \
-                .format("csv") \
-                    .option("checkpointLocation", "checkpoint/trend_games_checkpoint") \
-                        .option("path", "outputs/trend_games_output") \
-                            .partitionBy("crawl_time") \
-                                .start() \
-                                    .awaitTermination()
-
-    # query = output_df \
-    #     .writeStream \
-    #         .outputMode("update") \
-    #             .format("console") \
-    #                 .start() \
-    #                     .awaitTermination()
+    if not debug:
+        query = output_df \
+            .writeStream \
+                .outputMode("append") \
+                    .format("csv") \
+                        .option("checkpointLocation", "checkpoint/trend_games_checkpoint") \
+                            .option("path", "outputs/trend_games_output") \
+                                .partitionBy("crawl_time") \
+                                    .start() \
+                                        .awaitTermination()
+    else:
+        query = output_df \
+            .writeStream \
+                .outputMode("update") \
+                    .format("console") \
+                        .start() \
+                            .awaitTermination()
 
 if __name__ == "__main__":
-    main()
+    main() 

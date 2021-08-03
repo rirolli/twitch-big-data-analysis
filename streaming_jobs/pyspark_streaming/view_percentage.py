@@ -4,6 +4,8 @@ from pyspark.sql.functions import *
 
 # Job3: analisi degli streaming al fine di determinare una percentuale delle persone che guardano lo streaming rispetto al totale degli iscritti.
 
+debug = False
+
 schema = StructType([StructField('stream_id',StringType(),False),
                     StructField('current_view',IntegerType(),True),
                     StructField('stream_created_time',TimestampType(),True),
@@ -43,23 +45,24 @@ def main():
 
     df_watermark = df.select("data.stream_id", 'data.game_name', 'data.current_view', 'data.broadcaster_id', 'data.broadcaster_name', 'data.follower_number', col("data.crawl_time").cast("timestamp")) \
         .withColumn('view_percentage', col('current_view')/col('follower_number'))
-        
-    query = df_watermark \
-        .writeStream \
-            .outputMode("append") \
-                .format("csv") \
-                    .option("checkpointLocation", "checkpoint/view_percentage_checkpoint") \
-                        .option("path", "outputs/view_percentage_output") \
-                            .partitionBy("crawl_time") \
-                                .start() \
-                                    .awaitTermination()
-
-    # query = df_watermark \
-    #     .writeStream \
-    #         .outputMode("append") \
-    #             .format("console") \
-    #                 .start() \
-    #                     .awaitTermination()
+    
+    if not debug:
+        query = df_watermark \
+            .writeStream \
+                .outputMode("append") \
+                    .format("csv") \
+                        .option("checkpointLocation", "checkpoint/view_percentage_checkpoint") \
+                            .option("path", "outputs/view_percentage_output") \
+                                .partitionBy("crawl_time") \
+                                    .start() \
+                                        .awaitTermination()
+    else:
+        query = df_watermark \
+            .writeStream \
+                .outputMode("append") \
+                    .format("console") \
+                        .start() \
+                            .awaitTermination()
 
 if __name__ == "__main__":
     main()

@@ -15,7 +15,7 @@ def main():
     # spark session
     spark = SparkSession \
         .builder \
-            .appName("views") \
+            .appName("controller") \
                 .getOrCreate()
 
     mongo = MongoClient(host='localhost', port=27017)
@@ -28,14 +28,9 @@ def main():
     sleep(10)
 
     print('###### Starting the SQL Analysis Jobs ######')
-    # inizializzazioni
-    # vcr = ViewClassifierRequest(spark_view=spark, spark_mean=spark, mongo=mongo, save_format='mongo')
-    # vpr = ViewPercentageRequest(spark=spark, mongo=mongo, save_format='mongo')
-    # tgr = TrendGamesRequest(spark=spark, mongo=mongo, save_format='mongo')
-
-    vcr = ViewClassifierRequest(save_format='mongo')
-    vpr = ViewPercentageRequest(save_format='mongo')
-    tgr = TrendGamesRequest(save_format='mongo')
+    vcr = ViewClassifierRequest(spark_view=spark, spark_mean=spark, save_format='mongo')
+    vpr = ViewPercentageRequest(spark=spark, save_format='mongo')
+    tgr = TrendGamesRequest(spark=spark, save_format='mongo')
 
     # esecuzione dei job sql
     try:

@@ -5,6 +5,8 @@ from pyspark.sql.functions import *
 
 # Job1: analisi delle visualizzazioni correnti per ogni streaming generandone una classifica;
 
+debug = False
+
 schema = StructType([StructField('stream_id',StringType(),False),
                     StructField('current_view',IntegerType(),True),
                     StructField('stream_created_time',TimestampType(),True),
@@ -47,22 +49,23 @@ def main():
 
     output_df = df.select('data.stream_id', 'data.game_name', 'data.current_view', col('data.stream_created_time').cast('timestamp'), col("data.crawl_time").cast("timestamp"))
 
-    query = output_df \
-        .writeStream \
-            .outputMode("append") \
-                .format("csv") \
-                    .option("checkpointLocation", "checkpoint/view_classifier_checkpoint") \
-                        .option("path", "outputs/view_classifier_output") \
-                            .partitionBy("crawl_time") \
-                                .start() \
-                                    .awaitTermination()
-
-    # query = output_df \
-    #     .writeStream \
-    #         .outputMode("append") \
-    #             .format("console") \
-    #                 .start() \
-    #                     .awaitTermination()
+    if not debug:
+        query = output_df \
+            .writeStream \
+                .outputMode("append") \
+                    .format("csv") \
+                        .option("checkpointLocation", "checkpoint/view_classifier_checkpoint") \
+                            .option("path", "outputs/view_classifier_output") \
+                                .partitionBy("crawl_time") \
+                                    .start() \
+                                        .awaitTermination()
+    else:
+        query = output_df \
+            .writeStream \
+                .outputMode("append") \
+                    .format("console") \
+                        .start() \
+                            .awaitTermination()
 
 if __name__ == "__main__":
     main()

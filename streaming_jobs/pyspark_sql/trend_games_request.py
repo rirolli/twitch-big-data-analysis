@@ -7,16 +7,13 @@ from pymongo import MongoClient
 
 from json import loads
 
-from datetime import datetime
-
 class TrendGamesRequest:
-    input_filepath = "outputs/trend_games_output"
+    input_filepath = 'outputs/trend_games_output'
     output_filepath = 'outputs/trend_games_request_output'
 
     last_crawl_view = None
 
     schema = StructType([StructField('game_name',StringType(),True),
-                        StructField('count',IntegerType(),False),
                         StructField('crawl_time',TimestampType(),False)
                         ])
 
@@ -32,7 +29,7 @@ class TrendGamesRequest:
         if spark is None:
             spark = SparkSession \
                 .builder \
-                    .appName("view_classifier_requests") \
+                    .appName("trend_games_requests") \
                         .getOrCreate()
         self.spark = spark
 
@@ -48,13 +45,15 @@ class TrendGamesRequest:
 
         # ricerca dell'ultima data
         last_crawl = input_df.select(max(col("crawl_time"))).first()['max(crawl_time)']
-    
+
         if not last_crawl == self.last_crawl_view:
             self.last_crawl_view = last_crawl
 
             # estrapolazione delle percentuali ordinate
             ranked_df = input_df.filter(col("crawl_time") == last_crawl) \
-                .orderBy('count', ascending=False)
+                .groupBy(col('game_name')) \
+                    .count() \
+                        .orderBy('count', ascending=False)
 
             if verbose:
                 ranked_df.show()
@@ -66,3 +65,5 @@ class TrendGamesRequest:
                 lines = map(lambda x: loads(x), lines)
                 lines = {self.last_crawl_view.strftime("%Y-%m-%dT%H:%M:%S"):list(lines)}
                 self.mongo_col.insert_one(document=lines)
+            else:
+                pass

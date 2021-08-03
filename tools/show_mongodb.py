@@ -32,7 +32,7 @@ def print_records(mongo_col):
 
 
 def main():
-    get_records(field='data_lake')  # cambia questo valore per selezionare una altro db
+    get_records(field='trend_games')  # cambia questo valore per selezionare una altro db
 
 
 if __name__ == "__main__":
