@@ -25,11 +25,10 @@ all_DF_2 = all_DF.withColumn('currentViews', split_col.getItem(1).cast(IntegerTy
                        .withColumn('broadcasterName', split_col.getItem(5)) \
                        .drop("value")
 
-all_DF.show()
-all_DF_2.show()
+
 all_DF_2.select("*").sort("currentViews", ascending=False).show()
 
-all_DF_2.select("*").groupBy("broadcasterName").max("currentViews").sort("max(currentViews)", ascending=False).show()
+all_DF_2.select("*").groupBy("broadcasterID","broadcasterName","gameName").max("currentViews").sort("max(currentViews)", ascending=False).show()
 
 spark.stop()
 
