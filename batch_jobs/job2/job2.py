@@ -35,8 +35,6 @@ all_DF = spark.createDataFrame(new)
 
 all_DF_2=all_DF.select("*").sort("current_view", ascending=False)
 
-all_DF_2.show()
-
 all_DF_2.select("*").groupBy("broadcaster_id","broadcaster_name","game_name").max("current_view").sort("max(current_view)", ascending=False).show()
 
 client.close()
