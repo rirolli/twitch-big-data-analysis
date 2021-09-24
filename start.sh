@@ -11,7 +11,10 @@ gnome-terminal -t "kafka-console-consumer.sh" -e "$KAFKA_HOME/bin/kafka-console-
 gnome-terminal -t "kafka_mongo_connector.py" -e "python3 batch_jobs/kafka_mongo_connector.py"
 
 # starting of streaming scripts
-gnome-terminal -t "controller.py" -e "python3 streaming_jobs/controller.py"
+gnome-terminal -t "streaming_controller" -e "python3 streaming_jobs/controller.py"
+
+# starting of batch scripts
+gnome-terminal -t "batch_controller" -e "python3 batch_jobs/controller.py"
 
 # starting of batch scripts
 
