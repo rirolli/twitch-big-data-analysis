@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 #job1 
-# To run this Job use:
-#bin/mongoimport --db twitch_broadcaster --collection all --drop --file ~/desktop/broadcaster/all_broadcaster_dict.json
-#bin/mongoimport --db twitch_broadcaster --collection ps4 --drop --file ~/desktop/broadcaster/ps4_broadcaster_dict.json
-#bin/mongoimport --db twitch_broadcaster --collection xbox --drop --file ~/desktop/broadcaster/xbox_broadcaster_dict.json
+
 
 """spark application"""
 
@@ -26,7 +23,7 @@ spark.sparkContext.setLogLevel("ERROR")
 from pyspark.sql.types import IntegerType, StringType, StructType, StructField
 
 #Getting a Database
-db = client.twitch_broadcaster
+db = client.data_lake
 #Getting a Collection
 collection1 = db.all
 collection2 = db.ps4
@@ -36,15 +33,18 @@ print(collection1.count_documents({}))
 print(collection2.count_documents({}))
 print(collection3.count_documents({}))
 
-# Id is set to IntegerType
-schema = StructType([
-    StructField("Id", IntegerType())
-])
+all = pd.DataFrame(list(collection1.find()))
+ps4 = pd.DataFrame(list(collection2.find()))
+xbox = pd.DataFrame(list(collection3.find()))
+
+all_df = all[['broadcaster_id']].copy()
+ps4_df = ps4[['broadcaster_id']].copy()
+xbox_df = xbox[['broadcaster_id']].copy()
 
 #Read from a collection called all in a database called twitch and create a DataFrame
-all_DF = spark.createDataFrame(list(db.all.find()))
-ps4_DF = spark.createDataFrame(list(db.ps4.find()))
-xbox_DF = spark.createDataFrame(list(db.xbox.find()))
+all_DF = spark.createDataFrame(all_df)
+ps4_DF = spark.createDataFrame(ps4_df)
+xbox_DF = spark.createDataFrame(xbox_df)
 
 
 l=[[all_DF.count(),ps4_DF.count(),xbox_DF.count(),all_DF.count()-ps4_DF.count()-xbox_DF.count()]]

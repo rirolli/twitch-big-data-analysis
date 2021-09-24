@@ -9,18 +9,16 @@ Questo script è un connettore personalizzato per l'inserimento dei dati inviati
 I dati inviati da kafka vengono salvati nella collezione "twitch" del DataBase MongoDB denominato "data_lake".
 
 Esempio di dato inviato su mongoDB:
-    {'stream_id': '12935994288', 'current_view': 0, 'stream_created_time': '2015-02-01T08:03:40.000+01:00',
-    'game_name': 'Minecraft', 'broadcaster_id': 79402242, 'broadcaster_name': 'chrisruszkowski',
-    'follower_number': 3, 'total_view_broadcaster': 1, 'language': 'en',
-    'broadcaster_created_time': '2015-01-10T06:46:52.000+01:00', 'playback_bitrate': 1022250,
-    'crawl_time': '2015-02-01T00:05:00Z'}
+    {"stream_id": 12935994288, "current_view": 0,
+    "stream_created_time": 2015-02-01T08:03:40.000+01:00, "game_name": "Minecraft",
+    "broadcaster_id": 79402242, "broadcaster_name": "chrisruszkowski", "follower_number": 3,
+    "total_view_broadcaster": 1, "language": "en", "broadcaster_created_time": 2015-01-10T06:46:52.000+01:00,"playback_bitrate": 1022250, "crawl_time": 2015-02-01T00:05:00Z} 
 
 Esempio dello stesso dato di prima salvato su mongoDB:
-    {'_id': ObjectId('610169d9c80fdc38abb6f8e1'), 'stream_id': '12935994288', 'current_view': 0,
-    'stream_created_time': '2015-02-01T08:03:40.000+01:00', 'game_name': 'Minecraft',
-    'broadcaster_id': 79402242, 'broadcaster_name': 'chrisruszkowski', 'follower_number': 3,
-    'total_view_broadcaster': 1, 'language': 'en', 'broadcaster_created_time': '2015-01-10T06:46:52.000+01:00',
-    'playback_bitrate': 1022250, 'crawl_time': '2015-02-01T00:05:00Z'}
+    {'_id': ObjectId('610169d9c80fdc38abb6f8e1'), "stream_id": 12935994288, "current_view": 0,
+    "stream_created_time": 2015-02-01T08:03:40.000+01:00, "game_name": "Minecraft",
+    "broadcaster_id": 79402242, "broadcaster_name": "chrisruszkowski", "follower_number": 3,
+    "total_view_broadcaster": 1, "language": "en", "broadcaster_created_time": 2015-01-10T06:46:52.000+01:00,"playback_bitrate": 1022250, "crawl_time": 2015-02-01T00:05:00Z}
 '''
 
 def main():

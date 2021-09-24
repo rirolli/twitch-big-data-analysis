@@ -18,7 +18,7 @@ class uploadDataMongo():
         mongo_client = MongoClient(host='localhost', port=27017)
         mongo_db = mongo_client.data_lake
         # Lista delle collezioni del db 'data_lake' in Mongo
-        self.mongo_field = [mongo_db.all, mongo_db.ps, mongo_db.xbox]
+        self.mongo_field = [mongo_db.all, mongo_db.ps4, mongo_db.xbox]
 
     def run(self):
         try:
