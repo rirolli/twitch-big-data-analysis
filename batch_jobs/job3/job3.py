@@ -2,39 +2,43 @@
 """spark application"""
 
 import argparse
+import pandas as pd
 from pyspark.sql import SparkSession
+from pymongo import MongoClient
+from bson.objectid import ObjectId
 # create parser and set its arguments
-from pyspark.sql.types import IntegerType
+from pyspark.sql.types import IntegerType, StringType, StructType, StructField
 
-all_filepath  = "file:///Users/seb/Desktop/broadcaster/all-2015.txt"
+client = MongoClient('localhost', 27017)
 
 # initialize SparkSession with the proper configuration
 spark = SparkSession.builder.appName("job2").getOrCreate()
 spark.sparkContext.setLogLevel("ERROR")
 
-# import the txt file as a DataFrame 
-all_DF = spark.read.text(all_filepath).cache()
+#Getting a Database
+db = client.data_lake
+#Getting a Collection
+collection = db.twitch
 
-from pyspark.sql.functions import split
-# split the "value" column with delimiter ' '
-split_col = split(all_DF['value'], '	')
+print(collection.count_documents({}))
 
-all_DF_2 = all_DF.withColumn('currentViews', split_col.getItem(1).cast(IntegerType())) \
-                       .withColumn('gameName', split_col.getItem(3)) \
-                       .withColumn('broadcasterID', split_col.getItem(4).cast(IntegerType())) \
-                       .withColumn('broadcasterName', split_col.getItem(5)) \
-                       .drop("value")
+df = pd.DataFrame(list(collection.find()))
 
-all_DF_2.show()
+#second DataFrame 
+sdf = df[['current_view','game_name','broadcaster_id','broadcaster_name']].copy()
 
-#top 25 dei giochi più stremmati del mese
-all_DF_2.select("*").groupBy("gameName").count().sort("count", ascending=False).limit(25).show()
-#top 25 giochi più seguiti del mese
-all_DF_2.select("*").groupBy("gameName").sum("currentViews").sort("sum(currentViews)", ascending=False).limit(25).show()
-#top 25 streamer più seguiti del mese
-all_DF_2.select("*").groupBy("broadcasterName").sum("currentViews").sort("sum(currentViews)", ascending=False).limit(25).show()
+all_DF = spark.createDataFrame(sdf)
 
+print("top 25 dei giochi più stremmati del mese")
+all_DF.select("*").groupBy("game_name").count().sort("count", ascending=False).limit(25).show()
 
+print("top 25 giochi più seguiti del mese")
+all_DF.select("*").groupBy("game_name").sum("current_view").sort("sum(current_view)", ascending=False).limit(25).show()
+
+print("top 25 streamer più seguiti del mese")
+all_DF.select("*").groupBy("broadcaster_name").sum("current_view").sort("sum(current_view)", ascending=False).limit(25).show()
+
+client.close()
 
 spark.stop()
 
