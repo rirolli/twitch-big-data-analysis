@@ -80,6 +80,8 @@ in particolare:
 * __/dataset__ è la cartella contente i dataset scaricabili [qui](https://clivecast.github.io);
 * __/streaming_jobs__ contiene file di script di esecuzione dei job in streaming.
 
+Inoltre vi è una directory denominata __/report__ che contiene la presentazione e il report da consegnare per la valutazione del progetto.
+
 ## Come eseguire il codice
 Per prima cosa bisogna avviare i servizi di Kafka
 
